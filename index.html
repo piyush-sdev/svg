@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SVG Drawing</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    svg {
+      border: 2px solid black;
+      background: white;
+      cursor: crosshair;
+    }
+    button{
+        height: 35px;
+    }
+  </style>
+</head>
+<body>
+    <button id="clrb">delete</button>
+  <h2>SVG Drawing Area</h2>
+
+  <svg id="drawingArea" width="600" height="400"></svg>
+
+  <script>
+    const svg = document.getElementById("drawingArea");
+    const clrb= document.getElementById("clrb");
+
+    clrb.addEventListener("click",() =>{
+    svg.innerHTML = ""; 
+});
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    svg.addEventListener("mousedown", (e) => {
+      isDrawing = true;
+
+      const rect = svg.getBoundingClientRect();
+      lastX = e.clientX - rect.left;
+      lastY = e.clientY - rect.top;
+    });
+
+    svg.addEventListener("mousemove", (e) => {
+      if (!isDrawing) return;
+
+      const rect = svg.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", lastX);
+      line.setAttribute("y1", lastY);
+      line.setAttribute("x2", x);
+      line.setAttribute("y2", y);
+      line.setAttribute("stroke", "green");
+      line.setAttribute("stroke-width", "2");
+
+      svg.appendChild(line);
+
+      lastX = x;
+      lastY = y;
+    });
+
+    svg.addEventListener("mouseup", () => {
+      isDrawing = false;
+    });
+
+    svg.addEventListener("mouseleave", () => {
+      isDrawing = false;
+    });
+  </script>
+
+</body>
+</html>
